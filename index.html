@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./css/styles.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <script defer type="module" src="./js/index.js"></script>
+    <title>A* Pathfinding</title>
+  </head>
+  <body>
+    <canvas id="canvas" width="300" height="300"></canvas>
+    <div id="🤖">
+      <h1>A* algorithm</h1>
+      <p>
+        or <b>A star</b> is a path search algorithm used in many fields <br />
+        of computer science
+      </p>
+
+      <br />
+
+      <p><i>n: node</i></p>
+      <p id="g">G (cost between start and <i>n</i>):</p>
+
+      <br />
+
+      <p id="h">
+        H (<i>heuristic</i> function estimating the cost of <br />
+        the cheapest path from <i>n</i> to goal):
+      </p>
+
+      <br />
+
+      <p id="f">F (G + H):</p>
+
+      <br />
+
+      <p><i>Right click on the path to see his G, H and F values</i></p>
+      <p><i>You can also drag and drop start and end points anywhere!</i></p>
+      <p>
+        <i
+          >The cost between nodes is ≃ 40 since the grid nodes have <br />
+          40px width and height</i
+        >
+      </p>
+    </div>
+  </body>
+</html>
