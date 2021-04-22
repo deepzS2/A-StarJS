@@ -2,7 +2,7 @@ import NodeGrid from "./nodes.js";
 export default class Canvas {
     constructor() {
         this.nodesRadius = 20;
-        this.grid = new Array();
+        this.grid = null;
         this.isDragging = false;
         this.points = new Array();
         this.mousePosition = { x: 0, y: 0 };
@@ -84,20 +84,27 @@ export default class Canvas {
         return this.grid[position[0]][position[1]];
     }
     drawGrid() {
-        this.grid = new Array();
         const nodesDiameter = this.nodesRadius * 2;
-        for (let x = 0; x <= Math.floor(this.width / nodesDiameter); x++) {
-            this.grid.push([]);
-            for (let y = 0; y <= Math.floor(this.height / nodesDiameter); y++) {
-                const positionX = x * nodesDiameter; // + this.nodesRadius
-                const positionY = y * nodesDiameter; // + this.nodesRadius
-                this.grid[x].push(new NodeGrid(positionX, positionY));
+        if (!this.grid) {
+            this.grid = new Array();
+            for (let x = 0; x <= Math.floor(this.width / nodesDiameter); x++) {
+                this.grid.push([]);
+                for (let y = 0; y <= Math.floor(this.height / nodesDiameter); y++) {
+                    const positionX = x * nodesDiameter; // + this.nodesRadius
+                    const positionY = y * nodesDiameter; // + this.nodesRadius
+                    this.grid[x].push(new NodeGrid(positionX, positionY));
+                }
             }
         }
         for (const nodes of this.grid) {
             for (const node of nodes) {
                 // this.context.beginPath()
-                this.context.fillStyle = "hsl(90, 9%, 86%)";
+                if (node.isObstacle) {
+                    this.context.fillStyle = "#000";
+                }
+                else {
+                    this.context.fillStyle = "hsl(90, 9%, 86%)";
+                }
                 this.context.fillRect(node.positionX, node.positionY, nodesDiameter - 0.1, nodesDiameter - 0.1);
                 this.context.stroke();
                 // this.context.closePath()
@@ -122,6 +129,12 @@ export default class Canvas {
             }
         }
         if (event.button === 0) {
+            const nodePos = this.nodeFromPosition(mx, my);
+            const isPoint = this.points.find((point) => point.x === nodePos.positionX && point.y === nodePos.positionY);
+            if (!isPoint) {
+                nodePos.isObstacle = !nodePos.isObstacle;
+                return;
+            }
             this.isDragging = true;
             this.points.forEach((value, i, thisArray) => {
                 const insideDiameter = (position) => value[position] + (this.nodesRadius * 2 - 0.1);

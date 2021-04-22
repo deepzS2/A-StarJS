@@ -74,7 +74,7 @@ export default class PathAlgorithm {
             current.y + j * this.canvas.NodesDiameter
           )
 
-          if (!neighbour) continue
+          if (!neighbour || neighbour.isObstacle) continue
 
           const setNeighbourClosed = this.closedSets.find(
             (value) =>

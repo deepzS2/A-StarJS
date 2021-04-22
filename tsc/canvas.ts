@@ -13,7 +13,7 @@ export default class Canvas {
   private canvas: HTMLCanvasElement
   private context: CanvasRenderingContext2D
   private nodesRadius: number = 20
-  private grid: NodeGrid[][] = new Array<NodeGrid[]>()
+  private grid: NodeGrid[][] = null
   private isDragging = false
   private width: number
   private height: number
@@ -129,24 +129,33 @@ export default class Canvas {
   }
 
   public drawGrid() {
-    this.grid = new Array()
     const nodesDiameter = this.nodesRadius * 2
 
-    for (let x = 0; x <= Math.floor(this.width / nodesDiameter); x++) {
-      this.grid.push([])
+    if (!this.grid) {
+      this.grid = new Array()
 
-      for (let y = 0; y <= Math.floor(this.height / nodesDiameter); y++) {
-        const positionX = x * nodesDiameter // + this.nodesRadius
-        const positionY = y * nodesDiameter // + this.nodesRadius
+      for (let x = 0; x <= Math.floor(this.width / nodesDiameter); x++) {
+        this.grid.push([])
 
-        this.grid[x].push(new NodeGrid(positionX, positionY))
+        for (let y = 0; y <= Math.floor(this.height / nodesDiameter); y++) {
+          const positionX = x * nodesDiameter // + this.nodesRadius
+          const positionY = y * nodesDiameter // + this.nodesRadius
+
+          this.grid[x].push(new NodeGrid(positionX, positionY))
+        }
       }
     }
 
     for (const nodes of this.grid) {
       for (const node of nodes) {
         // this.context.beginPath()
-        this.context.fillStyle = "hsl(90, 9%, 86%)"
+
+        if (node.isObstacle) {
+          this.context.fillStyle = "#000"
+        } else {
+          this.context.fillStyle = "hsl(90, 9%, 86%)"
+        }
+
         this.context.fillRect(
           node.positionX,
           node.positionY,
@@ -186,6 +195,19 @@ export default class Canvas {
     }
 
     if (event.button === 0) {
+      const nodePos = this.nodeFromPosition(mx, my)
+
+      const isPoint = this.points.find(
+        (point) =>
+          point.x === nodePos.positionX && point.y === nodePos.positionY
+      )
+
+      if (!isPoint) {
+        nodePos.isObstacle = !nodePos.isObstacle
+
+        return
+      }
+
       this.isDragging = true
 
       this.points.forEach((value, i, thisArray) => {

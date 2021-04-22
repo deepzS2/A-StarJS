@@ -35,7 +35,7 @@ export default class PathAlgorithm {
             for (let i = -1; i <= 1; i++) {
                 for (let j = -1; j <= 1; j++) {
                     const neighbour = this.canvas.nodeFromPosition(current.x + i * this.canvas.NodesDiameter, current.y + j * this.canvas.NodesDiameter);
-                    if (!neighbour)
+                    if (!neighbour || neighbour.isObstacle)
                         continue;
                     const setNeighbourClosed = this.closedSets.find((value) => value.x === neighbour.positionX && value.y === neighbour.positionY);
                     if (setNeighbourClosed)
